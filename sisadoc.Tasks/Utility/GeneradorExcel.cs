@@ -21,7 +21,7 @@ namespace sisadoc.Tasks.Utility
              //Reading from a OpenXml Excel file (2007 format; *.xlsx)
              string nombreFull = "Reporte Docente_" + mes + ".xlsx";
              if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-             string pathFull = path + "\\" + "Reporte Docente_" + mes + ".xlsx";
+             string pathFull = path + "\\" + "Reporte Docente_" + mes + ".xlsx"; 
              //Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
 
              //if (xlApp == null)
