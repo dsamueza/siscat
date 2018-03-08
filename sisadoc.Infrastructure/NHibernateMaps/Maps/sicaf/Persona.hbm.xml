@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="sisadoc.Domain" namespace="sisadoc.Domain.sicaf" schema="sisadoc.dbo">
+	<class name="Persona" table="si_persona" >
+		<id name="Id" column="si_prs_cod" unsaved-value="0" type="Int32">
+			<generator class="identity" />
+		</id>
+		<property name="NombreCompleto" column="si_prs_nom" type="String"  not-null="true" />
+		<property name="Nombre" column="si_prs_pri_nom" type="String"  not-null="true" />
+	
+		<property name="Apellido" column="si_prs_pri_ape" type="String"  not-null="true" />
+		<property name="LoginUsuario" column="si_prs_lgn" type="String"  not-null="true" />
+    <property name="PasswordUsuario" column="si_prs_pass" type="String"  not-null="true" />
+    
+    <property name="usr_hos_web" column="usr_cmb_web" type="String"  not-null="true" />
+		<property name="usr_cmb_web" column="usr_hos_web" type="String"  not-null="true" />
+
+
+		
+
+	</class>
+</hibernate-mapping>

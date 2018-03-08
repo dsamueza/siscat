@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="sisadoc.Domain" namespace="sisadoc.Domain.sicaf" schema="sisadoc.dbo">
+  <class name="ObservacionActividad" table="sa_act_observacion" >
+    <id name="Id" column="SA_AC_OBS_COD" unsaved-value="0" type="Int32">
+      <generator class="identity" />
+    </id>
+    <property name="Observacion" column="SA_ACT_OBS_DES" type="String"  not-null="true" />
+    <property name="FechaEnvio" column="SA_ACT_OBS_FCH" type="DateTime"  not-null="true" />
+    <property name="CodigoPersonaEnvio" column="SI_PRS_COD_ENV" type="Int32"  not-null="true" />
+    <property name="CodigoPersonaDestinatario" column="SI_PRS_COD_REC" type="Int32"  not-null="true" />
+    <property name="CodigoMesObservacion" column="sa_act_obs_mes" type="String"  not-null="true" />
+    <property name="FechaLectura" column="sa_act_obs_fch_lec" type="DateTime"  not-null="false" />
+    <property name="usr_hos_web" column="usr_hos_web" type="String"  not-null="true" />
+    <property name="usr_cmb_web" column="usr_cmb_web" type="String"  not-null="true" />
+
+
+
+  </class>
+</hibernate-mapping>

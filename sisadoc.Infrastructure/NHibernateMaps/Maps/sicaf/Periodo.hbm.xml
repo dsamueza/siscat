@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="sisadoc.Domain" namespace="sisadoc.Domain.sicaf" schema="sisadoc.dbo">
+	<class name="Periodo" table="sa_periodo" >
+		<id name="Id" column="sa_per_cod" unsaved-value="0" type="Int32">
+			<generator class="identity" />
+		</id>
+		<property name="IdEscP" column="sa_esc_cod" type="Int32" />
+		<property name="IdUniversidadP" column="sa_uni_cod" type="Int32" />
+		<property name="IdFacultadP" column="sa_fac_cod" type="Int32" />
+		<property name="DescripPeriodo" column="sa_per_des" type="String"  not-null="true" />
+		<property name="PeriodoAbierto" column="sa_per_abi" type="Int32" />
+		<property name="PeriodoPropedeutico" column="sa_per_prp" type="Int32" />
+		<property name="PeriodoInicio" column="sa_per_fch_ini" type="DateTime"  not-null="true" />
+		<property name="PeriodoFin" column="sa_per_fch_fin" type="DateTime"  not-null="true" />
+
+
+
+
+	</class>
+</hibernate-mapping>

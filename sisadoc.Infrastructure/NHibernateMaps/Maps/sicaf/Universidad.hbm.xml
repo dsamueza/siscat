@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="sisadoc.Domain" namespace="sisadoc.Domain.sicaf" schema="sisadoc.dbo">
+	<class name="Universidad" table="sa_universidad" >
+		<id name="Id" column="sa_uni_cod" unsaved-value="0" type="Int32">
+			<generator class="identity" />
+		</id>
+		<property name="NombreUniversidad" column="sa_uni_nom_com" type="String"  not-null="true" />
+		<property name="NombreSede" column="sa_uni_et1" type="String"  not-null="true" />
+
+		<property name="Estado" column="sa_uni_sta" type="int"  not-null="true" />
+
+
+
+
+	</class>
+</hibernate-mapping>

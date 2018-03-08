@@ -1,0 +1,49 @@
+﻿<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-sm-2 col-md-1">
+            <label class="txt-cabecera">Cuenta:</label>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            @*@Html.DropDownListFor(model => model.Nombre, Model.ActionsList, new { @class = "form-control" })*@
+
+            @Html.DropDownList("DpUniversidad", (SelectList)ViewBag.slUniversidad, new { @class = "form-control" })
+        </div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2 col-md-1">
+            <label class="txt-cabecera">Campaña: </label>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            @Html.DropDownList("slFacultad", (SelectList)ViewBag.slFacultad, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group" hidden>
+        <div class="col-sm-2 col-md-1">
+            <label class="txt-cabecera"> Escuela: </label>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            @Html.DropDownList("slEscuela", (SelectList)ViewBag.slEscuela, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2 col-md-2  col-lg-1">
+            <label class="txt-cabecera">Periodo:</label>
+        </div>
+        <div class="col-sm-6 col-md-5  col-lg-2">
+
+            @Html.DropDownList("slPeriodo", (SelectList)ViewBag.slPeriodo, new { @class = "form-control" })
+
+        </div>
+        <div class="col-xs-12 col-sm-2 col-lg-1 ">
+
+                <a href="javascript:generar()" class="form-control btn btn-danger btn-flat" id="idbuscar"> <span class="glyphicon glyphicon-search"></span> Buscar</a>
+        
+        </div>
+    </div>
+  
+
+
+
+      
+    </div>

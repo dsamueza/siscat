@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="sisadoc.Domain"
+                   namespace="sisadoc.Domain.sicaf"
+                   schema="sisadoc.dbo">
+	<class name="Escuela" table="sa_escuela">
+
+		<composite-id>
+			<key-property name="IdEsc" column="sa_esc_cod" type="Int32" />
+			<key-property name="IdUniversidad" column="sa_uni_cod" type="Int32" />
+			<key-property name="IdFacultad" column="sa_fac_cod" type="Int32" />
+		
+		</composite-id>
+
+	
+		<many-to-one name="FacultadEsc" class="Facultad" update="true" insert="true" >
+
+		<column name="sa_fac_cod" not-null="true" />
+		<column name="sa_uni_cod" not-null="true"/>
+		</many-to-one>
+		<property name="NombreEscuela" column="sa_esc_nom" type="String" not-null="true" />
+		<property name="Modalidad" column="sa_mod_cod" type="Int32" not-null="true" />
+
+	</class>
+
+</hibernate-mapping>

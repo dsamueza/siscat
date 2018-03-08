@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+				   assembly="sisadoc.Domain"
+				   namespace="sisadoc.Domain.sicaf"
+				   schema="sisadoc.dbo">
+	<class name="OpcionAplicacion" table="si_opc_apl">
+		<id name="Id" column="si_opc_apl_cod" type="Int32">
+			<generator class="identity" />
+		</id>
+
+		<many-to-one name="OpcionPadre" class="OpcionAplicacion" update="true" insert="true" column="si__si_opc_apl_cod"/>
+
+		<property name="Identificacion" column="si_opc_apl_id" type="String" not-null="true" />
+
+		<property name="NombreMenu" column="si_opc_apl_nom_menu" type="String" not-null="true" />
+
+		<property name="NombreVentana" column="si_opc_apl_nom_ventana" type="String" not-null="true" />
+
+		<property name="Accion" column="si_opc_apl_action" type="String" not-null="false" />
+
+		<property name="Controlador" column="si_opc_apl_controller" type="String" not-null="false" />
+	    
+		<property name="Iconos" column="si_opc_apl_glifos" type="String" not-null="false" />
+		
+
+		<bag name="SubOpciones" lazy="true" order-by="si_opc_apl_id">
+			<key>
+				<column name="si__si_opc_apl_cod" />
+			</key>
+			<one-to-many class="OpcionAplicacion" />
+		</bag>
+
+
+
+	</class>
+
+</hibernate-mapping>

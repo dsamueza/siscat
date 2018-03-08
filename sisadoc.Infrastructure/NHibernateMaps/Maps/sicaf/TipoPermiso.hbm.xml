@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="sisadoc.Domain" namespace="sisadoc.Domain.sicaf" schema="sisadoc.dbo">
+	<class name="TipoPermiso" table="si_tpo_usuario" >
+		<id name="Id" column="si_tpo_usr_cod" unsaved-value="0" type="Int32">
+			<generator class="identity" />
+		</id>
+		<property name="NombreRol" column="si_tpo_usr_nom" type="String"  not-null="true" />
+
+		<!-- Relacion de tabla tpo_usarios y si_opc_apl_usr_tpo-->
+		<bag name="OpcionesAplicacion"  table="si_opc_apl_usr_tipo"  inverse="true"  cascade="save-update"  lazy="true" fetch="select"  >
+			<key>
+				<column name="si_tpo_usr_cod" not-null="true" />
+			</key>
+			<one-to-many class="sisadoc.Domain.sicaf.OpcionesUsuario" />
+		</bag>
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,681 @@
+﻿@model  sisadoc.Web.Mvc.Models.ListModel
+
+@{
+    ViewBag.Title = @ViewBag.tipoUsuario;
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+<h3>Ingreso Novedades<small> Perfil Gestor.</small></h3>
+<hr style="  background-color: #be0811 !important;">
+@{Html.RenderAction("_cabecerasCarreras", "Docente");}
+<hr style="  background-color: #be0811 !important;">
+
+<div class="modal fade" id="myModal" role="dialog">
+    @{Html.RenderAction("_IngresoActividad", "Docente");}
+</div>
+<div class="row">
+    <div class="col-sm-offset-9">
+
+        <!-- Trigger the modal with a button -->
+        <div class="form-group col-sm-5 col-sm-offset-6">
+            <a href="javascript:EnvioAct()" class="btn btn-success btn-md form-control"  style="margin-bottom: 8px;"> <span class="glyphicon glyphicon-send"></span> Enviar</a>
+        </div>
+            <!-- Modal -->
+            <div class="modal fade" id="List-modal" role="dialog">
+                @{Html.RenderAction("_DespliegueActividades", "Docente");}
+            </div>
+
+
+        </div>
+    </div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div id='calendar'>
+    </div>
+</div>
+<div class="clearfix"> </div>
+
+@section scripts
+{
+    <!-- DATA TABLES SCRIPT -->
+    <script src="@Url.Content("~/Scripts/moment.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/fullcalendar.js")"></script>
+    <script src="@Url.Content("~/Scripts/lang-all.js")"></script>
+    <script src="@Url.Content("~/Scripts/fileinput.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/fileinput_locale_es.js")" charset="UTF-8"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap-datetimepicker.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap-datetimepicker.es.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap-select.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/Autocomplete/taskCliente.js")"></script>
+
+}
+
+
+
+@section viewDidLoad
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+                           var today = new Date();
+
+                           var now = today.getFullYear().toString() + "-" + (today.getUTCMonth()+1).toString() + "-" + today.getDate().toString()
+                           var idActividad = 0
+                           var urlArchivo = "";
+
+                            $('#datetimepicker6').datetimepicker({
+                                language:  'es',
+                                weekStart: 1,
+                                todayBtn: 1,
+                                autoclose: 1,
+                                todayHighlight: 1,
+                                startView: 2,
+                                forceParse: 0,
+                                showMeridian: 1
+                            });
+
+                            $('#datetimepicker7').datetimepicker({
+                                language: 'es',
+                                weekStart: 1,
+                                todayBtn: 1,
+                                autoclose: 1,
+                                todayHighlight: 1,
+                                startView: 2,
+                                forceParse: 0,
+                                showMeridian: 1
+                            });
+                            $('#datetimepickerMonth').datetimepicker({
+
+                                language: 'es',
+                                weekStart: 1,
+                                todayBtn: 1,
+                                autoclose: 1,
+                                todayHighlight: 1,
+                                startView: 2,
+                                forceParse: 0,
+                                showMeridian: 1,
+                                startView: "year",
+                                minViewMode: "months"
+                            });
+                        $("#datetimepicker6").change(function (e) {
+                                    $('#datetimepicker7').datetimepicker('setStartDate', $("#evenIni").val().toString());
+                         });
+                            $("#datetimepicker7").change(function (e) {
+                                $('#datetimepicker6').datetimepicker('setEndDate', $("#evenFin").val().toString());
+                            });
+                            $("#load-partial").on('click', function () {
+
+
+                                //setup modaln
+                                $('#List-modal').modal({
+                                    show: 'true'
+                                });
+                            });
+                            $('[data-toggle="popover"]').popover({
+                                placement: 'top',
+                                html: true,
+                                content: function () {
+                                   var mens="   "
+                                   var mens1 ="<div><b>Popover Example</b> 1 - Content</div>"
+                                   mens1 += "<div><b>Popover Example2</b> 1 - Content</div>"
+                                  $.ajax({
+                                        type: "POST",
+                                        processData: true,
+                                        url:"@Url.Action("HorasDocentes", "Docente")",
+                                      data: {
+                                          codperiodo: $("#slPeriodo").val(),
+                                          mesSt: $("#DpMess").val().toString()
+                                      },
+                                        success: function (escuela) {
+
+                                            $.each(escuela, function (index, value) {
+                                                if (escuela[index].tipo==1) {
+                                                    mens += "<div> " + "<a href=''>" + escuela[index].NombreActividad + " : <span class='label label-success label-as-badge'>" + escuela[index].HorasTotales + " </span></a><br>" + "</div>"
+
+                                                }
+                                                if (escuela[index].tipo == 2) {
+                                                    mens += "<div> " + "<a href=''>" + escuela[index].NombreActividad + " : <span class='label label-info label-as-badge'>" + escuela[index].HorasTotales + " </span></a><br>" + "</div>"
+
+                                                }
+                                                if (escuela[index].tipo == 3) {
+                                                    mens += "<div> " + "<a href=''>" + escuela[index].NombreActividad + " : <span class='label label-danger label-as-badge'>" + escuela[index].HorasTotales + " </span></a><br>" + "</div>"
+
+                                                }
+                                            }
+                                            );
+
+                                        },
+                                      async: false,
+                                      cache: false,
+                                    });
+
+                                    return mens;
+                                }
+                            });
+
+
+            $('[data-toggle="popoverObs"]').popover({
+                placement: 'bottom',
+                width: '600px',
+                height:'250px',
+                html: true,
+                content: function () {
+                    var mens="   "
+                    var mens1 =" "
+
+                    $.ajax({
+                        type: "POST",
+                        processData: true,
+                        url:"@Url.Action("MostrarObsPendiente", "Docente")",
+                        data: {
+
+                            MesEnc: $("#DpMess").val().toString()
+                        },
+                    success: function (escuela) {
+                        mens1 += "<div><b></b></div>"
+                        mens1 += escuela
+
+                    },
+                    async: false,
+                    cache: false,
+                    });
+
+                    return mens1;
+        }
+        });
+
+            generar();
+        });
+        $("#DpMess").change(function () {
+            deleteRow("datos")
+            desactivarObs($("#DpMess").val().toString())
+            cargartablaActividad();
+        });
+        $("#slFacultad").change(function () {
+          cargarEscuelas();
+        });
+        $("#slEscuela").change(function () {
+
+            cargarPeriodo();
+            $('#Calendar').fullCalendar('destroy');
+         });
+
+         function deleteRow(tableID) {
+
+             try {
+
+                 var table = document.getElementById(tableID);
+
+                 var rowCount = table.rows.length;
+
+                 for (var i = 1; i < rowCount; i++) {
+
+                     var row = table.rows[i];
+
+                     var chkbox = row.cells[0].childNodes[0];
+                         table.deleteRow(i);
+                           rowCount--;
+                        i--;
+                 }
+
+             } catch (e) {
+
+                 alert(e);
+
+             }
+
+         }
+         function EnvioAct()
+         {
+
+
+             $.ajax({
+                 type: "POST",
+                 url: "@Url.Action("CargaPeriodo", "Docente")",
+                data: {
+                    codperiodoE: $("#slPeriodo").val()
+
+                },
+                success: function (actividad) {
+                    if (actividad.length > 0) {
+                        $("#DpMess").empty();
+                        deleteRow("datos")
+                        $.each(actividad, function (index, value) {
+                            $("#DpMess").append("<option value=" + actividad[index].Idmes + ">" + actividad[index].Mes + "</option>");
+                        }
+                        );
+                        cargartablaActividad()
+                        desactivarObs($("#DpMess").val().toString())
+                        $('#List-modal').modal({
+                            show: 'true'
+                        });
+
+                        return
+                    } {
+                        bootbox.alert("No existe actividades, favor ingresar al menos una actividad")
+
+                    }
+                },
+                async: false,
+                cache: false,
+                error: function () { }
+
+            });
+
+         }
+         function fileDelete() {
+
+             deleteRow("datosArch")
+         }
+        function FormatoDate(idFECHA)
+
+        {
+            FECHAFORMAT = moment(idFECHA).format('YYYY/MM/DD HH:mm:ss ')
+            return FECHAFORMAT
+
+        }
+        //Cargar archivos
+        $('#file-es').fileinput({
+            language: 'es',
+            uploadAsync: true,
+            maxFileCount: 1,
+            showUpload: true,
+
+            uploadUrl: "@Url.Action("Upload", "Docente")",
+            allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
+
+        }).on('fileuploaded', function (event, data, id, index) {
+            response= data.response
+            urlArchivo = response[0].Text
+
+        });
+
+        function cargarEscuelas() {
+
+            var items = $("#slFacultad option").length;
+            //si no existe paises
+            if (items <= 0) {
+                //elimino provincias
+                $("#slEscuela").empty();
+                //elimino ciudades
+                $("#slPeriodo").empty();
+            }
+            else {
+                   $.ajax({
+                    type: "POST",
+                    url:"@Url.Action("ObtenerCarreras", "Docente")",
+                    data: {
+                        IdFac: $("#slFacultad").val().toString()
+                    },
+                    success: function (escuela) {
+                        $("#slEscuela").empty();
+                        $.each(escuela, function (index, value) {
+                            $("#slEscuela").append("<option value=" + escuela[index].Id + ">" + escuela[index].Text + "</option>");
+                        }
+                        );
+                        cargarPeriodo()
+                    },
+                    async: false,
+                    cache: false,
+                    error: function () { }
+                   });
+                //CargarCarrereas();
+            }
+        }
+
+        function cargartablaActividad() {
+
+            var items = $("#DpMess option").length;
+            //si no existe paises
+            if (items <= 0) {
+                $("#DpMess").empty();
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ObtenerActividadMes", "Docente")",
+                    data: {
+                        idmesSt: $("#DpMess").val().toString(),
+
+                    },
+                    success: function (tabla) {
+                        $.each(tabla, function (index, value) {
+
+                            $("#datos").append("  <tr id=" + tabla[index].id + " > <td>" + tabla[index].id + "</td> <td>" + tabla[index].title + "</td> <td>" + FormatoDate(FORMATjSONDATE(tabla[index].startEvent)).toString() + "</td> <td>" + tabla[index].cliente.toString() + "</td> <td>  " + jSONActividad(tabla[index].tipo) + "</td>   </tr>");
+                    }
+                   );
+
+                },
+                async: false,
+                cache: false,
+                error: function () { }
+            });
+            //cargarPeriodos();
+        }
+        }
+
+
+
+
+        function cargarPeriodo() {
+            var items = $("#slEscuela option").length;
+            //si no existe paises
+            if (items <= 0) {
+                $("#slPeriodo").empty();
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ObtenerPeriodo", "Docente")",
+                    data: {
+                        IdFac: $("#slFacultad").val(),
+                        IdEsc: $("#slEscuela").val()
+                    },
+                    success: function (periodo) {
+                        $("#slPeriodo").empty();
+                        $.each(periodo, function (index, value) {
+                            $("#slPeriodo").append("<option value=" + periodo[index].Id + ">" + periodo[index].Text + "</option>");
+                        }
+                        );
+
+                    },
+                    async: false,
+                    cache: false,
+                    error: function () { }
+                });
+                //cargarPeriodos();
+            }
+        }
+        function ShowModal(start, end) {
+            $('#datetimepicker6').datetimepicker('setStartDate', FormatoDate(start));
+            $('#datetimepicker7').datetimepicker('setStartDate', FormatoDate(end));
+            $('#EliminarActividad').hide();
+            $('#EditarActividad').hide();
+            $('#GuardarActividad').show();
+
+
+            FormatoDate(end)
+            ClearModal()
+            $('#myModal').modal({
+                show: 'true'
+            });
+            $("#evenIni").val(FormatoDate(start))
+            $("#evenFin").val(FormatoDate(end))
+            $('#eventTitle').focus();
+
+        }
+
+        function EditModal(IdCodAct) {
+
+            $('#EliminarActividad').show();
+            $('#EditarActividad').show();
+            $('#GuardarActividad').hide();
+            idActividad = IdCodAct
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("RecuperarActividad", "Docente")",
+                data: {
+                    IdactE: IdCodAct
+                },
+                success: function (actividad) {
+                    if (actividad.length > 0) {
+                        var newDate = FORMATjSONDATE(actividad[0].FechaFin);
+
+                        ClearModal()
+
+                        $("#eventTitle").val(actividad[0].DescripcionActividad.toString())
+                        $("#evenIni").val(FormatoDate(FORMATjSONDATE(actividad[0].FechaInicio)).toString())
+                        $("#evenFin").val(FormatoDate(FORMATjSONDATE(actividad[0].FechaFin)).toString())
+                        $("#autocomplete-ajax").val(actividad[0].Cliente.toString())
+                        $("#idCliente").val(actividad[0].idCliente.toString())
+                        $("#selecac").val(actividad[0].TipoActividad)
+                        $("#datosArch").append("<tr id=" + idActividad + " ><td>" + actividad[0].RespaldoDigital.toString() + "</td> <td>" + "<a href='javascript:fileDelete() ' class='glyphicon glyphicon-trash'> </a>" + "</td>  <td>" + "<a href='@Url.Action("DescargarArch", "Docente")?Idact=" + idActividad + " ' class='glyphicon glyphicon-download'> </a>" + "</td> </tr>");
+                        $('#myModal').modal({
+                            show: 'true'
+                        });
+
+                        return
+                    } {
+                        bootbox.alert("No existe la actividad ")
+
+                    }
+                },
+                async: false,
+                cache: false,
+                error: function () { }
+
+            });
+        }
+        function FORMATjSONDATE(JSONDATE) {
+            var MyDate_String_Value = JSONDATE
+            var value = new Date
+                        (
+                             parseInt(MyDate_String_Value.replace(/(^.*\()|([+-].*$)/g, ''))
+                        );
+            var dat = value.getMonth() +
+                                     1 +
+                                   "/" +
+                       value.getDate() +
+                                   "/" +
+                   value.getFullYear();
+
+            return value
+
+        }
+        function jSONActividad(JSONTIPO) {
+
+            var actividad = ""
+            if (JSONTIPO == 1) { actividad = "Gestión"; }
+            if (JSONTIPO == 2) { actividad = "Pedidos"; }
+            if (JSONTIPO == 3) { actividad = "Preguntas"; }
+            return actividad
+
+        }
+        function ClearModal() {
+
+            $("#eventTitle").val("");
+            $("#autocomplete-ajax").val("");
+            urlArchivo = "";
+            $('#file-es').fileinput('clear');
+            deleteRow("datosArch")
+            //$('#eventDateTime').val("");
+            //$('#eventDuration').val("");
+        }
+        $('#GuardarActividad').click(function () {
+            $('#input-id').fileinput('upload');
+
+            var dataRow = {
+                'Inicio': $("#evenIni").val().toString(),
+                'Fin': $("#evenFin").val().toString(),
+                'Descripcion': $("#eventTitle").val().toString(),
+                'tipo': $("#selecac").val().toString(),
+                'Periodo': $("#slPeriodo").val().toString(),
+                'Url': urlArchivo.toString(),
+                'idCliente': $('#idCliente').val().toString()
+
+            }
+
+            ClearModal();
+            $.ajax({
+
+                type: "POST",
+                url: "@Url.Action("GuardarActividad", "Docente")",
+                data: dataRow,
+                success: function (estado) {
+
+                    if (estado[0].Id == "True") {
+                        bootbox.alert("Se guardo exitosamente")
+                        $('#calendar').fullCalendar('refetchEvents');
+                        $("#DocenteCod").val()
+                        $('#myModal').modal('hide');
+                        return
+                    }
+
+                    if (estado[0].Id == "URL") {
+                        bootbox.alert("Debe Cargar un archivo para guardar")
+                        return
+                    }
+                    bootbox.alert("Existe cruce de horarios")
+
+
+                },
+                async: false,
+                cache: false,
+                error: function () { }
+            });
+
+        });
+        $('#IdObservaciones').click(function () {
+            desactivarObs($("#DpMess").val().toString());
+        });
+        $('#EnAct').click(function () {
+            var dataRow = {
+                'my': $("#DpMess").val().toString(),
+                'Periodo': $("#slPeriodo").val()
+            }
+
+
+
+            $.ajax({
+
+                type: "POST",
+                url: "@Url.Action("EnviarActividadMesual", "Docente")",
+                data: dataRow,
+                success: function (estado) {
+
+                    if (estado[0].Id == "True") {
+
+                        $('#calendar').fullCalendar('refetchEvents');
+                        $('#List-modal').modal('hide');
+                        bootbox.alert("Se ha enviado un correo al mail del Supervisor para la gestión de la Novedad")
+                        return
+                    }
+                    bootbox.alert("No se pudo guardar la actividad verifique la información")
+                },
+                async: false,
+                cache: false,
+                error: function () { }
+
+            });
+
+        });
+        $('#EditarActividad').click(function () {
+
+            var dataRow = {
+                'Inicio': $("#evenIni").val().toString(),
+                'Fin': $("#evenFin").val().toString(),
+                'Descripcion': $("#eventTitle").val().toString(),
+                'tipo': $("#selecac").val().toString(),
+                'Periodo': $("#slPeriodo").val().toString(),
+                'id': idActividad,
+                'UrlPath': urlArchivo.toString(),
+                'idCliente': $('#idCliente').val().toString()
+            }
+
+
+            ClearModal();
+            $.ajax({
+
+                type: "POST",
+                url: "@Url.Action("ActualizarActividad", "Docente")",
+                data: dataRow,
+                success: function (estado) {
+
+                    if (estado[0].Id == "True") {
+                        $('#calendar').fullCalendar('refetchEvents');
+                        $('#myModal').modal('hide');
+                        return
+                    }
+                    bootbox.alert("No se pudo guardar la actividad verifique la información")
+                },
+                async: false,
+                cache: false,
+                error: function () { }
+            });
+
+        });
+        $('#EliminarActividad').click(function () {
+
+            var dataRow = {
+                'id': idActividad
+            }
+
+            ClearModal();
+            $.ajax({
+
+                type: "POST",
+                url: "@Url.Action("EliminarActividad", "Docente")",
+                data: dataRow,
+                success: function (estado) {
+
+                    if (estado[0].Id == "True") {
+                        $('#calendar').fullCalendar('refetchEvents');
+                        $('#myModal').modal('hide');
+                        return
+                    }
+                    bootbox.alert("No se pudo eliminar la actividad")
+                },
+                async: false,
+                cache: false,
+                error: function () { }
+            });
+
+        });
+        function generar() {
+            var periodo = $("#slPeriodo").val()
+            var noTime = Date.now();
+            $('#calendar').fullCalendar('refetchEvents');
+            $('#calendar').fullCalendar({
+
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultDate: noTime,
+                lang: 'es',
+                selectable: true,
+                selectHelper: true,
+                defaultView: 'agendaWeek',
+                //dayClick: function (start, end) {
+
+
+                //    alert(start)
+                //    alert(end)
+                //    ShowModal(start, end);
+                //},
+                select: function (start, end) {
+
+                    ShowModal(start, end);
+                },
+                eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc) {
+                    if (confirm("¿Desea Mover su evento?")) {
+                        EditModal(event.id)
+                    }
+                    else {
+                        revertFunc();
+                    }
+                },
+                eventClick: function (calEvent, jsEvent, view) {
+                    EditModal(calEvent.id)
+                },
+                editable: true,
+                eventLimit: false, // allow "more" link when too many events
+                events: {
+                    url: "@Url.Action("GetEventos", "Docente")",
+                    type: 'POST',
+                    data: {
+                        perido: periodo,
+
+                    },
+                    error: function () {
+                        alert('there was an error while fetching events!');
+                    },
+                }
+            });
+
+
+        };
+    </script>
+}

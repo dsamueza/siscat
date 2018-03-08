@@ -1,0 +1,42 @@
+﻿@model  sisadoc.Domain.sicaf.ObservacionActividad
+
+<div class="modal-dialog modal-ms">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4> <p class="text-info">  Lista de Docente Para revisión </p> </h4>
+            <div id="Idcod">
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                          @using (Html.BeginForm("ObservacionActividad", "Coordinador", FormMethod.Post, new Dictionary<string, Object> { { "id", "myForm" } }))
+                              {
+                                <div class="form-group">                          
+                                    <label for="comment">Observaciones:</label>
+                                    <textarea class="textarea" name="Observacion" style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">
+                                    </textarea>
+                                </div> 
+                                <button type="submit" id="enviarButton" class="btn btn-primary"><i class="fa fa-envelope-o"></i>&nbsp;Enviar</button>
+                                <button type="button" class="btn bg-primary" data-dismiss="modal">Salir</button>
+                                <input type="hidden" name="CodigoPersonaDestinatario" id="CodDestinatario"  value="2" />
+                                <input type="hidden" name="CodigoMesObservacion" id="CodObserva" value="10_2015" />    
+                                <input type="hidden" name="Periodo" id="CodPeriodo"  value="2" />                      
+                              }
+                </div>
+             </div>'
+           </div>
+    </div>
+    <script>
+    
+
+    </script>
+
+    @*<div class="modal-footer">
+            <button type="button" class="btn bg-primary" id="EnviarActividad">Enviar</button>
+            <button type="button" class="btn bg-primary" data-dismiss="modal">Salir</button>
+        </div>*@
+</div>

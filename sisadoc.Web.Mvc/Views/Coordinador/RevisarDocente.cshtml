@@ -1,0 +1,492 @@
+﻿@model  sisadoc.Web.Mvc.Models.ListModel
+
+@{
+    ViewBag.Title = @ViewBag.tipoUsuario;
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+<h3>Gestión Novedades<small> Perfil Supervisor.</small></h3>
+<hr style="  background-color: #be0811 !important;">
+@{Html.RenderAction("_cabecerasCarrerasCoordinador", "Coordinador");}
+<hr style="  background-color: #be0811 !important;">
+<div class="clearfix"> </div>
+
+<!-- Modal -->
+<div class="modal fade" id="List-modal" role="dialog">
+    @{Html.RenderAction("_ListaDocenteRevision", "Coordinador");}
+</div>
+<div class="clearfix"> </div>
+
+<!-- Modal -->
+<div class="modal fade" id="Obs-modal" role="dialog">
+    @{Html.RenderAction("_ObservacionDocente", "Coordinador");}
+</div>
+
+<br />
+
+
+@*<div id="pvistaParcial1">
+     @{Html.RenderAction("_TablaDatos", "Coordinador", new { @persona = 88012, @periodo = 4914 });}
+    </div>*@
+<input type="hidden" id="DocenteCod" value="0" />
+
+<div id="pvistaParcial">
+
+
+</div>
+<div id="DatosTabla" class="col-xs-12 col-sm-12    col-lg-12">
+    <div class="table-responsive">
+        <table id="datosCoord" class="table table-striped table-bordered table-hover dataTable no-footer small" role="grid">
+            <caption class="text-left"><b> Tabla de Novedades</b></caption>
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Cliente</th>
+                    <th class=" hidden-xs visible-md-block">Celular</thhidden-lg>
+                    <th class=" hidden-xs visible-md-block">Fecha</th>
+                    <th class=" hidden-xs visible-md-block">Observación</th>
+                    <th class=" hidden-xs visible-md-block">Tipo</th>
+
+
+                </tr>
+            </thead>
+            <tbody class="searchable"></tbody>
+
+        </table>
+    </div>
+</div>
+
+<div class="clearfix"> </div>
+<div class="modal fade" id="myModal" role="dialog">
+    @{Html.RenderAction("_DespliegueNovedad", "Coordinador");}
+</div>
+
+@section scripts
+{
+    <!-- DATA TABLES SCRIPT -->
+
+    <script src="@Url.Content("~/Scripts/moment.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/lang-all.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/dataTables.bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootbox.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/toaster/jquery.toaster.js")"></script>
+    <script src="@Url.Content("~/Scripts/toaster/jquery.toaster.js")"></script>
+    <script src="@Url.Content("~/plugins/wysihtml5/bootstrap3-wysihtml5.all.min.js")"></script>
+    <script src="@Url.Content("~/plugins/jqueryForm/jquery.form.min.js")"></script>
+    <script src="@Url.Content("~/plugins/wysihtml5/locales/bootstrap-wysihtml5.es-ES.js")"></script>
+}
+@section viewDidLoad
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var mesDoc = "";
+            var codDoc = 0;
+            generarTabla()
+            $('[data-toggle="tooltip"]').tooltip({ html: true });
+            generarTablaDocente()
+
+
+            $(".textarea").wysihtml5({
+
+                locale: "es-ES",
+                link: false
+            });
+            $('#myForm').ajaxForm({
+                dataType: 'json',
+                beforeSubmit: function (arr, $form, options) {
+                    var isValid = true;
+                    return isValid == true;
+                },
+                success: function (data) {
+
+                    if (data.valid) {
+                        //desactivarss()
+                        $.toaster({
+                            priority: 'info',
+                            title: 'Aviso',
+                            message: "Se reenvio las actividades para revisión del docente",
+                            settings: {
+                                timeout: 5500
+                           }
+                        });
+
+                        desactivarss()
+                        $('#Obs-modal').modal('hide');
+
+                    }
+                    else if (data.valid === false) {
+                        $.toaster({
+                            priority: 'danger',
+                            title: 'Aviso',
+                            message: "Existio un error comuniquese con el administrador"
+                            //settings: {
+                            //    timeout: 5500
+                            //}
+                        });
+                        return
+                    }
+
+                }
+            })
+
+        });
+
+
+
+        function MtdObservacion() {
+
+            $.ajax(
+                          {
+                              type: 'POST',
+                              url: '@Url.Action("AprobarActividad", "Coordinador")',
+                                 data: {
+                                         periodo: $("#slPeriodo").val().toString(),
+                                         docPers: codDoc,
+                                         mes: mesDoc
+                                        },
+                                 success: function (LstResult) {
+
+                                     if (LstResult.Id = "True")
+                                     {
+
+                                         //desactivarss()
+                                         $.toaster({
+                                             priority: 'success',
+                                             title: 'Aviso',
+                                             message: "Las actividades del docente fueron Aprobadas"
+                                             //settings: {
+                                             //    timeout: 5500
+                                             //}
+                                         });
+                                         desactivarss()
+                                         return
+                                     }
+                                     else {
+
+
+                                     }
+
+
+
+
+                         },
+
+                         error: function (error) {
+                             alert(error)
+                         }
+                     });
+        }
+
+
+
+        function RMtdObservacion() {
+
+            $('#Obs-modal').modal({
+                show: 'true'
+            });
+    }
+        var table
+        function generarTabla() {
+            if (screen.width >600) {
+
+
+                table = $('#datosCoord').dataTable({
+                    "language": {
+                        "url": "@Url.Content("~/Scripts/Spanish.json")"
+                    }
+                    ,
+
+                    "ajax": {
+                        "url": "@Url.Action("DtTablaDatos", "Coordinador")",
+                        "type": "POST",
+                        "data": function (d) {
+                            return $.extend({}, d, {
+                                "periodo": $("#slPeriodo").val(),
+                                "persona": $("#DocenteCod").val(),
+                                "mes": $("#DpMess").val()
+                            });
+                        },
+                        "dataSrc": function (json) {
+
+                            for (var i = 0, ien = json.length; i < ien; i++) {
+
+                                json[i].RespaldoDigital = "<a href='@Url.Action("DescargarArchCoordinador", "Coordinador")?Idact=" + json[i].IdC + "&UsuC=" + json[i].CodigoPersona + " ' class='glyphicon glyphicon-download'>";
+                                json[i].CodigoCliente = "<a href='javascript:ShowNovedad(" + json[i].Id + ")' class='glyphicon glyphicon-info-sign'>";
+                            }
+
+                            return json;
+                        }
+                    },
+                    "columns": [
+                        { "data": "Id" },
+
+                        { "data": "NombreCompleto" },
+                        { "data": "Phone" },
+                        { "data": "FechaInicio" },
+                        { "data": "DescripcionActividad" },
+                        { "data": "TipoActividad" },
+                        { "data": "RespaldoDigital" },
+                        { "data": "CodigoCliente" }
+                    ]
+
+
+                });
+
+            } else {
+                      table = $('#datosCoord').dataTable({
+                    "language": {
+                        "url": "@Url.Content("~/Scripts/Spanish.json")"
+                    }
+                    ,
+
+                    "ajax": {
+                        "url": "@Url.Action("DtTablaDatos", "Coordinador")",
+                        "type": "POST",
+                        "data": function (d) {
+                            return $.extend({}, d, {
+                                "periodo": $("#slPeriodo").val(),
+                                "persona": $("#DocenteCod").val(),
+                                "mes": $("#DpMess").val()
+                            });
+                        },
+                        "dataSrc": function (json) {
+
+                            for (var i = 0, ien = json.length; i < ien; i++) {
+
+                                json[i].RespaldoDigital = "<a href='@Url.Action("DescargarArchCoordinador", "Coordinador")?Idact=" + json[i].IdC + "&UsuC=" + json[i].CodigoPersona + " ' class='glyphicon glyphicon-download'>";
+                                json[i].CodigoCliente = "<a href='javascript:ShowNovedad(" + json[i].Id + ")' class='glyphicon glyphicon-info-sign'>";
+                            }
+
+                            return json;
+                        }
+                    },
+                    "columns": [
+                        { "data": "Id" },
+                        { "data": "NombreCompleto" },
+                        { "data": "CodigoCliente" },
+                        { "data": "RespaldoDigital" }
+                  
+                    ]
+
+
+                });
+
+            }
+
+        }
+
+
+        function ShowNovedad(idCliente) {
+
+            $('#EliminarActividad').show();
+            $('#EditarActividad').show();
+            $('#GuardarActividad').hide();
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("RecuperarNovedad", "Docente")",
+                data: {
+                    IdactE: idCliente
+                },
+            success: function (actividad) {
+                if (actividad.length > 0) {
+                    var newDate = FORMATjSONDATE(actividad[0].FechaFin);
+
+                    ClearModal()
+
+                    $("#eventTitle").val(actividad[0].DescripcionActividad.toString())
+                    $("#evenIni").val(FormatoDate(FORMATjSONDATE(actividad[0].FechaInicio)).toString())
+                    //$("#evenFin").val(FormatoDate(FORMATjSONDATE(actividad[0].FechaFin)).toString())
+                    $('#idlink').attr('src', 'data:image/png;base64,' + actividad[0].link.toString());
+                    $("#autocomplete-ajax").val(actividad[0].ClienteNombre.toString())
+                    $("#idCliente").val(actividad[0].idCliente.toString())
+                    $("#idcod").val(actividad[0].Id.toString())
+                    $("#Celular").val(actividad[0].Phone.toString())
+                    $("#selecac").val(actividad[0].TipoActividad)
+                    var tel = "tel:" + actividad[0].Phone.toString()
+                    $("#idllamar").attr('href', tel);
+                    $('#myModal').modal({
+                        show: 'true'
+                    });
+
+                    return
+                } {
+                    bootbox.alert("No existe la actividad ")
+
+                }
+            },
+            async: false,
+            cache: false,
+            error: function () { }
+
+        });
+
+
+        }
+        function ClearModal() {
+
+            $("#eventTitle").val("");
+            $("#autocomplete-ajax").val("");
+            urlArchivo = "";
+
+
+            //$('#eventDateTime').val("");
+            //$('#eventDuration').val("");
+        }
+
+        function FORMATjSONDATE(JSONDATE) {
+            var MyDate_String_Value = JSONDATE
+            var value = new Date
+                        (
+                             parseInt(MyDate_String_Value.replace(/(^.*\()|([+-].*$)/g, ''))
+                        );
+            var dat = value.getMonth() +
+                                     1 +
+                                   "/" +
+                       value.getDate() +
+                                   "/" +
+                   value.getFullYear();
+
+            return value
+
+        }
+        function FormatoDate(idFECHA) {
+            FECHAFORMAT = moment(idFECHA).format('YYYY/MM/DD HH:mm:ss ')
+            return FECHAFORMAT
+
+        }
+        $("#DpMess").change(function () {
+
+            cargartablaActividad();
+        });
+
+            function fnClick(codper) {
+
+                PartialCabeceraDocente(codper)
+
+                $("#DocenteCod").attr("value", codper)
+                codDoc = $("#DocenteCod").val()
+                mesDoc = $("#DpMess").val()
+                $("#CodDestinatario").attr("value", codDoc)
+                $("#CodObserva").attr("value", mesDoc)
+                $("#CodPeriodo").attr("value", $("#slPeriodo").val().toString())
+                var table = $('#datosCoord').DataTable();
+                table.ajax.reload();
+
+
+                $('#List-modal').modal('hide');
+
+            }
+            function PartialCabeceraDocente(perCod) {
+
+
+                $.ajax(
+                     {
+                         type: 'POST',
+                         url: '@Url.Action("_TablaDatos", "Coordinador")',
+                         data: {
+                             periodo: $("#slPeriodo").val().toString(),
+                             persona: perCod,
+                             mes: $("#DpMess").val()
+                         }, //datos o parametros enviados al servidor
+                         dataType: 'html', //el tipo de dato que nos regresara el servidor en este caso regresa html
+
+                         //URL del action result que cargara la vista parcial
+                         success: function (result) {
+                             // si la funcion se ejecuta lanzara un alert
+
+                             //cuando se ejecuta bien la funcion agregara al div vistaParcial el contenido
+                             //que recibio del servidor
+
+
+                             $("#pvistaParcial").html(result);
+
+
+                         },
+
+                         error: function (error) {
+                             // si hay un error lanzara el mensaje de error
+                             alert('Fail');
+                         }
+                     });
+
+            }
+            function generar() {
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ListaCargarDocente", "Coordinador")",
+                    data: {
+                        periodo: $("#slPeriodo").val().toString(),
+                        tipo:1
+                    },
+                    success: function (tabla) {
+
+                                     if (tabla.length > 0) {
+                                         $("#DpMess").empty();
+                                         $.each(tabla, function (index, value) {
+                                             $("#DpMess").append("<option value=" + tabla[index].Id + ">" + tabla[index].Text + "</option>");
+                                         });
+
+                                         cargartablaActividad();
+                                         $('#List-modal').modal({
+                                             show: 'true'
+                                         });
+                                 } else {
+                                     bootbox.alert("No existe novedades por Revisar")
+                                 }
+
+
+
+                    },
+                    async: false,
+                    cache: false,
+                    error: function () { }
+                });
+
+                //cargarPeriodos();
+
+
+            };
+
+
+
+
+        function AtenderAC() {
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Atender", "Coordinador")",
+                data: {
+                    Idcodigo: $("#idcod").val().toString()
+                },
+                success: function (tabla) {
+
+                    $('#myModal').modal('hide');
+                    var table = $('#datosCoord').DataTable();
+                    table.ajax.reload();
+
+
+
+
+            },
+            async: false,
+            cache: false,
+            error: function () {
+                generarTabla();
+                $('#myModal').modal('hide');
+            }
+        });
+
+        //cargarPeriodos();
+
+
+        };
+
+
+
+    </script>
+
+}

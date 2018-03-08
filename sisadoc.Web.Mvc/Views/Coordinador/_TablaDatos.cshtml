@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "vistaParcial";
+}
+
+
+<div class="message success col-md-12 ">
+    <div class="col-md-12">
+        <h5> <b>Enviado por:</b> <small> @ViewBag.DocenteCalificar</small></h5>
+    </div>
+
+    </div>
+    @*<div class="col-md-1 col-md-offset-7">
+             @if (ViewBag.ExistObsj > 0) {
+                <a href="#" class='HiddObs'  id='HiddObsID' data-toggle="popoverObsC" title="
+                 <h5>Observaciones Enviadas</h5>">
+                 <span aria-hidden="true" class="li_news fs1">
+                 </span>
+
+             </a>
+
+
+             }
+
+             <a href="javascript:RMtdObservacion()" class='EnvObs' data-toggle="tooltip" title="
+                 <h5>Enviar Observaciones</h5>">
+                 <span aria-hidden="true" class="li_note fs1">
+                 </span>
+
+             </a>
+
+             <a href="javascript:MtdObservacion()" class='AceptAct'  data-toggle="tooltip" title="
+                 <h5>Aceptar Actividades</h5>">
+                 <span aria-hidden="true" class="li_like fs1">
+
+                 </span>
+
+             </a>
+
+               <input type="hidden"  id="CodDocente" value=@ViewBag.CodDocente />
+        </div>*@
+
+    <script>
+               $('[data-toggle="tooltip"]').tooltip({ html: true });
+               $('[data-toggle="popoverObsC"]').popover({
+                   placement: 'bottom',
+                   width: '1000px',
+                   height: '1000px',
+                   html: true,
+                   content: function () {
+                       var mens = "   "
+                       var mens1 = " "
+
+                       $.ajax({
+                           type: "POST",
+                           processData: true,
+                           url: "@Url.Action("MostrarObsPendiente", "Coordinador")",
+                        data: {
+
+                            MesEnc: $("#DpMess").val().toString(),
+                            docente: $("#CodDocente").val()
+                        },
+                        success: function (escuela) {
+                            mens1 += ""
+                         //   mens1 += escuela
+                            $.each(escuela, function (index, value) {
+                                    mens1 += "<div><section> <h3>" + (index+1) + ".- Observación :</h3> <section> <p>" + escuela[index] + " </section></b></div>"
+
+                            });
+                        },
+                        async: false,
+                        cache: false,
+                    });
+
+                    return mens1;
+                }
+                  });
+               function desactivarss() {
+
+                   $('.AceptAct').bind('click', false);
+                   $('.EnvObs').bind('click', false);
+
+
+               }
+    </script>
+</div>
+

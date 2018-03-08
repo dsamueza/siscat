@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" schema="sisadoc.dbo">
+	<sql-query name="sp_carreraxdocente"  callable="true" >
+		<query-param name="prscods" type="System.Int32"/>
+		<return-scalar column ="Cedula" type ="System.String"/>
+		<return-scalar column ="CodigoProfesor" type ="System.Int32"/>
+		<return-scalar column ="NombreProfesor" type ="System.String"/>
+		<return-scalar column ="UnidadOrgaProfesor" type ="System.String"/>
+		<return-scalar column ="Escuela" type ="System.Int32"/>
+		<return-scalar column ="Facultad" type ="System.Int32"/>
+		<return-scalar column ="Universidad" type ="System.Int32"/>
+		<return-scalar column ="Periodo" type ="System.String"/>
+		<return-scalar column ="PeriodoCodigo" type ="System.Int32"/>
+		<return-scalar column ="PeriodoInicio" type ="DateTime"/>
+		<return-scalar column ="PeriodoFin" type ="DateTime"/>
+		exec sp_carreraxdocente @prscod = :prscods
+	</sql-query>
+</hibernate-mapping>

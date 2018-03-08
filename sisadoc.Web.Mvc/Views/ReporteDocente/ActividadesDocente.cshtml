@@ -1,0 +1,167 @@
+﻿@model  sisadoc.Web.Mvc.Models.ListModel
+
+@{
+    ViewBag.Title = @ViewBag.tipoUsuario;
+    Layout = "~/Views/Shared/_LayoutPrincipal.cshtml";
+}
+
+<h1>Revisión de actividades docentes<small> Perfil Coordinador.</small></h1>
+ <hr>
+     @{Html.RenderAction("_cabecerasCarrerasCoordinador", "Coordinador");}
+ <hr>
+   <!-- Modal ListaRevision-->
+    <input type="hidden" id="DocenteCod" value="0" />
+  <div class="modal fade" id="List-modal" role="dialog"> 
+   @{Html.RenderAction("_ListaDocente", "ReporteDocente");}
+  </div>
+
+  <div id="DatosTabla" class="col-xs-12 col-sm-12    col-lg-11" >
+      
+		   <div class="table-responsive">     
+				<table id="datosReporte" class="table table-striped table-hover dataTable no-footer small" role="grid" >
+                    <caption class="text-left">
+                       <h4> <b> Reporte de Actividades</b></h4>
+                   	</caption>
+					<caption class="text-right">
+                          <button type="submit" id="enviarExe" class="btn btn-default btn-sm"><i class="fa fa-file-excel-o"></i>&nbsp;Excel</button>
+                          <button type="submit" id="enviarpdf" class="btn btn-default btn-sm"><i class="fa fa-file-pdf-o"></i>&nbsp;PDF</button>
+                        <br />
+					</caption>
+					<thead>
+						<tr>
+							<th>Codigo</th>
+							<th>Descripción</th>
+							<th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+							<th>Tipo</th>
+							<th>Estado</th>
+						
+						</tr>
+					</thead>
+					<tbody class="searchable"> 
+					
+
+					</tbody>
+					
+				</table>
+             </div>
+		 </div>
+@section scripts
+{
+    <!-- DATA TABLES SCRIPT -->
+
+      
+     <script src="@Url.Content("~/Scripts/lang-all.js")" ></script>
+     <script src="@Url.Content("~/Scripts/jquery.dataTables.min.js")" ></script>
+     <script src="@Url.Content("~/Scripts/dataTables.bootstrap.min.js")" ></script>
+     <script src="@Url.Content("~/Scripts/bootbox.min.js")" ></script>
+     <script src="@Url.Content("~/Scripts/toaster/jquery.toaster.js")" ></script>
+     <script src="@Url.Content("~/Scripts/toaster/jquery.toaster.js")" ></script>
+     <script src="@Url.Content("~/plugins/wysihtml5/bootstrap3-wysihtml5.all.min.js")"></script>
+     <script src="@Url.Content("~/plugins/jqueryForm/jquery.form.min.js")"></script>
+     <script src="@Url.Content("~/plugins/wysihtml5/locales/bootstrap-wysihtml5.es-ES.js")"></script>
+}
+@section viewDidLoad
+{ 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var mesDoc = "";
+            var codDoc = 0;
+            generarTabla()
+            generarTablaDocente()
+
+        });
+         function generar() {
+          
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ListaCargarDocente", "Coordinador")",
+                    data: {
+                        periodo: $("#slPeriodo").val().toString(),
+                        tipo: 0
+                    },
+                    success: function (tabla) {
+                     
+                                     if (tabla.length > 0) {
+                                         $("#DpMess").empty();
+                                         $.each(tabla, function (index, value) {
+                                             $("#DpMess").append("<option value=" + tabla[index].Id + ">" + tabla[index].Text + "</option>");
+                                         });
+                                      
+                                         cargartablaActividad();
+                                         $('#List-modal').modal({
+                                             show: 'true'
+                                         });
+                                 } else {
+                                     alert("No existe registro docentes con actividades para aprobar")
+                                 }
+                                
+                       
+                               
+                    },
+                    async: false,
+                    cache: false,
+                    error: function () { }
+                });
+            
+         };
+        function generarTabla() {
+
+            var table = $('#datosReporte').dataTable({
+                "language": {
+                    "url": "@Url.Content("~/Scripts/Spanish.json")"
+                }
+                   ,
+                buttons: [
+                'copy', 'excel', 'pdf'
+                ],
+                "ajax": {
+                    "url": "@Url.Action("DTReporteDocente", "ReporteDocente")",
+                    "type": "POST",
+                    "data": function (d) {
+                        return $.extend({}, d, {
+                            "periodo": $("#slPeriodo").val(),
+                            "persona": $("#DocenteCod").val(),
+                            "mes": $("#DpMess").val()
+                        });
+                    },
+                    "dataSrc": function (json) {
+
+                       
+
+                        return json;
+                    }
+                },
+                "columns": [
+                    { "data": "Id" },
+                    { "data": "DescripcionActividad" },
+                    { "data": "FechaInicio" },
+                    { "data": "FechaFin" },
+                    { "data": "TipoActividad" },
+                    { "data": "RespaldoDigital" }
+                ]
+
+
+            });
+        }
+        function fnClick(codper) {
+           
+            $("#DocenteCod").attr("value", codper)
+            var table = $('#datosReporte').DataTable();
+            table.ajax.reload();
+            $('#List-modal').modal('hide');
+
+        }
+        $("#enviarpdf").on('click', function () {
+            window.location.href = '@Url.Action("DTDescarga", "ReporteDocente")?periodo=' + $("#slPeriodo").val().toString() + "&persona=" + $("#DocenteCod").val() + "&mes=" + $("#DpMess").val() + ' ';
+        });
+        $("#enviarExe").on('click', function () {
+            window.location.href = '@Url.Action("DTDescargaExcel", "ReporteDocente")?periodo=' + $("#slPeriodo").val().toString() + "&persona=" + $("#DocenteCod").val() + "&mes=" + $("#DpMess").val() + ' ';
+         });
+        $("#DpMess").change(function () {
+
+            cargartablaActividad();
+        });
+        </script>       
+        
+ }

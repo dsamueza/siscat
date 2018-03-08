@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" assembly="sisadoc.Domain" namespace="sisadoc.Domain.sicaf" schema="sisadoc.dbo">
+	<class name="ActividadDocente" table="sa_act_docente" >
+		<id name="Id" column="sa_act_doc_cod" unsaved-value="0" type="Int32">
+			<generator class="identity" />
+		</id>
+		<property name="DescripcionActividad" column="sa_act_doc_desc" type="String"  not-null="true" />
+		<property name="TipoActividad" column="sa_act_tpo_cod" type="Int32"  not-null="true" />
+		<property name="CodigoPeriodo" column="sa_per_cod" type="Int32"  not-null="true" />
+		<property name="CodigoPersona" column="si_prs_cod" type="Int32"  not-null="true" />
+    <property name="CodigoCliente" column="sa_cli_cod" type="Int32"  not-null="true" />
+		<property name="RespaldoDigital" column="sa_act_doc_respado" type="String"  not-null="false" />
+		<property name="FechaInicio" column="sa_act_fch_inicio" type="DateTime"  not-null="true" />
+		<property name="FechaFin" column="sa_act_fch_fin" type="DateTime"  not-null="true" />
+		<property name="usr_hos_web" column="usr_hos_web" type="String"  not-null="true" />
+		<property name="usr_cmb_web" column="usr_cmb_web" type="String"  not-null="true" />
+    <property name="EstadoActividad" column="sa_act_doc_sta" type="Int32"  not-null="true" />
+		<many-to-one name="PersonaActividad" class="Persona" update="true" insert="false" column="si_prs_cod"/>
+    <many-to-one name="ClienteActividad" class="Cliente" update="true" insert="false" column="sa_cli_cod"/>
+
+  </class>
+</hibernate-mapping>

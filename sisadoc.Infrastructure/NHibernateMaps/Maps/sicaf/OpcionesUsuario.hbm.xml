@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="sisadoc.Domain"
+                   namespace="sisadoc.Domain.sicaf"
+                   schema="sisadoc.dbo">
+	 <class name="OpcionesUsuario" table="si_opc_apl_usr_tipo">
+
+		<composite-id>
+			<key-property name="CodigoOpcionAplicacion" column="si_opc_apl_cod" type="int" />
+			<key-property name="CodigoUsuarioTipo" column="si_tpo_usr_cod" type="int" />
+		</composite-id>
+
+		<many-to-one name="MenuAplicacion" class="OpcionAplicacion" update="true" insert="true" column="si_opc_apl_cod"/>
+
+		<many-to-one name="UsuarioRol" class="TipoPermiso" update="true" insert="true" column="si_tpo_usr_cod"/>
+
+	</class>
+
+</hibernate-mapping>

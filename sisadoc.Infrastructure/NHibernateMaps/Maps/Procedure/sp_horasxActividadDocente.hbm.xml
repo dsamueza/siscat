@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" schema="sisadoc.dbo">
+  <sql-query name="sp_horasxActividadDocente"  callable="true" >
+    <query-param name="prs_cod" type="System.Int32"/>
+    <query-param name="mes" type="System.Int32"/>
+    <query-param name="per_cod" type="System.Int32"/>
+    
+    
+    <return-scalar column ="PersonaCodigo" type ="System.Int32"/>
+    <return-scalar column ="CodigoPerido" type ="System.Int32"/>
+    <return-scalar column ="NombreActividad" type ="System.String"/>
+    <return-scalar column ="HorasTotales" type ="System.String"/>
+    <return-scalar column ="tipo" type ="System.Int32"/>
+    exec sp_horasxActividadDocente @prs_cod = :prs_cod , @mes =:mes , @per_cod =:per_cod
+  </sql-query>
+</hibernate-mapping>
