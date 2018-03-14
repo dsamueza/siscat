@@ -496,7 +496,8 @@ namespace sisadoc.Web.Mvc.Controllers
                                                                      TipoActividad = obtenerMC.getActividad(e.TipoActividad),
                                                                      e.RespaldoDigital,
                                                                      CodigoPersona=EncParamentro.encriptartexto(e.CodigoPersona.ToString()),
-                                                                     e.CodigoCliente
+                                                                     e.CodigoCliente,
+                                                                    
                                                                     } );
 
                             ViewBag.DocenteCalificar = lstPersona.First().NombreCompleto;

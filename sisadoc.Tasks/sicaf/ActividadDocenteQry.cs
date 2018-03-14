@@ -31,11 +31,16 @@ namespace sisadoc.Tasks.sicaf
       {
           return IActividadDocente.GetActividadDocente(IdPrs);
       }
-      /// <summary>
-      /// Ingresa los datos de inscripción
-      /// </summary>
-      /// <param name="car_ute">Datos de inscripción</param>
-      public bool InsertActividadDocente(ActividadDocente IdPrs)
+
+        public IList<ActividadDocente> ObtenerActividad(bool all , int Estado)
+        {
+            return IActividadDocente.GetActividadDocenteAll(all,Estado);
+        }
+        /// <summary>
+        /// Ingresa los datos de inscripción
+        /// </summary>
+        /// <param name="car_ute">Datos de inscripción</param>
+        public bool InsertActividadDocente(ActividadDocente IdPrs)
       {
           return IActividadDocente.SaveActividadDocente(IdPrs);
       }
@@ -90,12 +95,27 @@ namespace sisadoc.Tasks.sicaf
       {
           return IActividadDocente.obtenerHorasTotales(CodPersona,mes,codPeriodo);
       }
-      /// <summary>
-      /// Obtienes todos los registro del docente en el periodo
-      /// </summary>
-      /// <param name="codPrs">Codigo Persona</param>
-      /// <param name="codPer">Codigo Periodo</param>
-      public IList<ActividadDocente> HorasRealizadas(int codPrs, int codPer)
+
+
+        public IList<CountActividadSp> obtenerNumeroActividades(DateTime begin, DateTime end)
+        {
+            return IActividadDocente.GetCountActiviCountActividad(begin, end);
+        }
+
+        public IList<ActividadTipoSp> ObtenerPorcentaAct(DateTime begin, DateTime end)
+        {
+            return IActividadDocente.GetPorcentActTipo(begin, end);
+        }
+        public IList<ActividadYear> obtenerNumeroXYear(DateTime begin, DateTime end)
+        {
+            return IActividadDocente.GetCountActiviYear(begin, end);
+        }
+        /// <summary>
+        /// Obtienes todos los registro del docente en el periodo
+        /// </summary>
+        /// <param name="codPrs">Codigo Persona</param>
+        /// <param name="codPer">Codigo Periodo</param>
+        public IList<ActividadDocente> HorasRealizadas(int codPrs, int codPer)
       {
           return IActividadDocente.HorasRealizadas(codPrs, codPer);
       }

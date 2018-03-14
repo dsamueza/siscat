@@ -118,5 +118,24 @@ namespace sisadoc.Web.Mvc.Utility
             }
             return color;
         }
+
+        public string GetEstado(int id)
+        {
+            string color = "";
+            switch (id)
+            {
+                case 1:
+                    color = "Pendiente";
+                    break;
+                case 2:
+                    color = "Pedidos";
+
+                    break;
+                case 3:
+                    color = "Atendida";
+                    break;
+            }
+            return color;
+        }
     }
 }

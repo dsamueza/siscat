@@ -23,7 +23,10 @@ namespace sisadoc.Domain.Reposositories
       bool DeleteActividadDocente(int id, string usr_web, string host_web);
       bool EnvioActividadDocente(int CodigoPersona, int CodigoPeriodo, int Mes, int Ano, string usr_web, string host_web, int estado);
       IList<HorasTotalesDocenteSp> obtenerHorasTotales(int CodPersona, int mes, int codPeriodo);
-
-      bool AtendidoActividadDocente(int id, string usr_web, string host_web, int estado);
+        IList<CountActividadSp> GetCountActiviCountActividad(DateTime begin, DateTime end);
+        IList<ActividadYear> GetCountActiviYear(DateTime begin, DateTime end);
+        IList<ActividadDocente> GetActividadDocenteAll(bool all, int status);
+        IList<ActividadTipoSp> GetPorcentActTipo(DateTime begin , DateTime end);
+        bool AtendidoActividadDocente(int id, string usr_web, string host_web, int estado);
     }
 }

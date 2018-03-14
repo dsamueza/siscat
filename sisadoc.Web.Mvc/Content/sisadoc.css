@@ -534,9 +534,9 @@ body {
 }
 .content-wrapper,
 .right-side {
-  min-height: 100%;
-  background-color: #d2d6de;
-  z-index: 800;
+    min-height: 100%;
+    background-color: #ebebeb33;
+    z-index: 800;
 }
 .main-footer {
   background: #fff;
@@ -4927,6 +4927,12 @@ fieldset[disabled] .btn-vk.active {
     
         width: 80px !important;
     }
+    .content-wrapper,
+    .right-side {
+        min-height: 100%;
+        background-color: #cdd9e4;
+        z-index: 800;
+    }
 }
 .file-drop-zone-title {
 
@@ -5035,6 +5041,10 @@ fieldset[disabled] .btn-vk.active {
     color: #000;
     display: block;
     border-bottom: 1px solid #000;
+}
+
+.dash-mardis {
+/*background-color:red !important;*/
 }
 
 

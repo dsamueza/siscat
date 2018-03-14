@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" schema="sisadoc.dbo">
+  <sql-query name="sp_act_estadisticas_tipo"  callable="true" >
+    <query-param name="@rageBegin" type="System.DateTime"/>
+    <query-param name="@rageEnd" type="System.DateTime"/>
+    <return-scalar column ="label" type ="System.String"/>
+    <return-scalar column ="data" type ="System.Double"/>
+    <return-scalar column ="color" type ="System.String"/>
+    exec sp_act_estadisticas_tipo @rageBegin= :rageBegin , @rageEnd= :rageEnd
+  </sql-query>
+</hibernate-mapping>

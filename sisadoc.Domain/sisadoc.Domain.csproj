@@ -90,11 +90,14 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Entity1.cs" />
+    <Compile Include="ProcedureClass\ActividadYear.cs" />
     <Compile Include="ProcedureClass\CarreraCoordinadorSp.cs" />
     <Compile Include="ProcedureClass\CarreraDocenteListadoSp.cs" />
     <Compile Include="ProcedureClass\CarreraDocenteSp.cs" />
     <Compile Include="ProcedureClass\Class1.cs" />
+    <Compile Include="ProcedureClass\ActividadTipoSp.cs" />
     <Compile Include="ProcedureClass\HorasTotalesDocenteSp.cs" />
+    <Compile Include="ProcedureClass\CountActividadSp.cs" />
     <Compile Include="ProcedureClass\RolPersonaSp.cs" />
     <Compile Include="Reposositories\IActividadDocenteRepository.cs" />
     <Compile Include="Reposositories\IEscuelaRepository.cs" />

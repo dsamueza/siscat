@@ -29,12 +29,24 @@ namespace sisadoc.Infrastructure.sicaf
                           .List();
 
       }
-      /// <summary>
-      /// Obtiene el todos las actividades por periodo 
-      /// </summary>
-      /// <param name="codPeriodo"></param>
-      /// <returns></returns>
-      public IList<ActividadDocente> GetActividadDocentePeriodo(int codPeriodo)
+
+
+        public IList<ActividadDocente> GetActividadDocenteAll(bool all  , int status)
+        {
+            var result = all ? Session.QueryOver<ActividadDocente>()
+                            .Where(a => a.EstadoActividad != 0)
+                            .List() : Session.QueryOver<ActividadDocente>()
+                            .Where(a => a.EstadoActividad== status)
+                            .List();
+            return result;
+
+        }
+        /// <summary>
+        /// Obtiene el todos las actividades por periodo 
+        /// </summary>
+        /// <param name="codPeriodo"></param>
+        /// <returns></returns>
+        public IList<ActividadDocente> GetActividadDocentePeriodo(int codPeriodo)
       {
           return Session.QueryOver<ActividadDocente>()
                           .Where(a => a.CodigoPeriodo == codPeriodo)
@@ -62,7 +74,38 @@ namespace sisadoc.Infrastructure.sicaf
           return res.List<HorasTotalesDocenteSp>();
 
       }
-       public bool EnvioActividadDocente(int CodigoPersona, int CodigoPeriodo, int Mes , int Ano , string usr_web, string host_web, int estado) 
+        #region dashboad
+
+        public IList<CountActividadSp> GetCountActiviCountActividad(DateTime begin, DateTime end)
+        {
+            var res = Session.GetNamedQuery("sp_count_actividades")
+                             .SetDateTime("rageBegin", begin)
+                     .SetDateTime("rageEnd", end)
+                       .SetResultTransformer(new AliasToBeanResultTransformer(typeof(CountActividadSp)));
+            return res.List<CountActividadSp>();
+
+        }
+        public IList<ActividadTipoSp> GetPorcentActTipo(DateTime begin, DateTime end)
+        {
+            var res = Session.GetNamedQuery("sp_act_estadisticas_tipo")
+                       .SetDateTime("rageBegin", begin)
+                     .SetDateTime("rageEnd", end)
+                       .SetResultTransformer(new AliasToBeanResultTransformer(typeof(ActividadTipoSp)));
+            return res.List<ActividadTipoSp>();
+
+        }
+
+        public IList<ActividadYear> GetCountActiviYear(DateTime begin, DateTime end)
+        {
+            var res = Session.GetNamedQuery("sp_act_for_year")
+                    .SetDateTime("rageBegin", begin)
+                     .SetDateTime("rageEnd", end)
+                       .SetResultTransformer(new AliasToBeanResultTransformer(typeof(ActividadYear)));
+            return res.List<ActividadYear>();
+
+        }
+        #endregion
+        public bool EnvioActividadDocente(int CodigoPersona, int CodigoPeriodo, int Mes , int Ano , string usr_web, string host_web, int estado) 
       {
          
               StringBuilder sb = new StringBuilder();
